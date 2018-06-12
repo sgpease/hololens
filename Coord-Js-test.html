@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h2>Convert a string written in JSON format, into a JavaScript object.</h2>
+
+<p id="demo"></p>
+
+<script>
+
+//var myJSON = '{ "name":"John", "age":31, "city":"New York" }';
+//var myObj = JSON.parse(myJSON);
+//document.getElementById("demo").innerHTML = myObj.name;
+
+
+var _new = '{"MessageType":"position","Description":"hololens","x":1,"y":2,"z":3.0}'
+var resetCoord = JSON.parse(_new);
+resetCoord.x=Math.floor((Math.random() * 100) + 1);
+resetCoord.y=Math.floor((Math.random() * 100) + 1);
+document.getElementById("demo").innerHTML = JSON.stringify(resetCoord);
+
+</script>
+
+</body>
+</html>
+
+
+
+		var elemLeft = canvas.offsetLeft;
+    	var elemTop = canvas.offsetTop;
+
+
+
+		// EVENT LISTENER FOR ON CLICK EVENT
+
+
+		canvas.addEventListener('click', function(event) {
+    		var x = event.pageX - elemLeft,
+        	y = event.pageY - elemTop;
+
+    		// COLLISION DETECTION BETWEEN CLICKED OFFSET AND ELEMENT
+    		elements.forEach(function(element) {
+        		if (y > element.top && y < element.top + element.height 
+            		&& x > element.left && x < element.left + element.width) {
+            			alert('clicked an element'+ element.left + ',' + element.top + ',' + dist);
+        		}
+    		});
+
+		}, false);
+
+
+
+
+
+
+
+
+
+
+		// Render elements.
+		//elements.forEach(function(element) {
+    		//ctx.fillStyle = element.colour;
+    		//ctx.fillRect(element.left, element.top, element.width, element.height);
+		//});​
+
+
+
+
+			// ADD ELEMENT TO ARRAY
+			elements.push({
+    			width: ctx.lineWidth,
+    			height: ctx.lineWidth,
+    			top: _newY,
+    			left: _newX
+    			//top: 20,
+    			//left: 15
+			});
+
+
+//////////////////////
+
+
+
+
+            var g = document.createElementNS (xmlns, "g");
+            svgElem.appendChild (g);
+            g.setAttributeNS (null, 'transform', 'matrix(1,0,0,-1,0,300)');
+
+                // draw linear gradient
+            var defs = document.createElementNS (xmlns, "defs");
+            var grad = document.createElementNS (xmlns, "linearGradient");
+            grad.setAttributeNS (null, "id", "gradient");
+            grad.setAttributeNS (null, "x1", "0%");
+            grad.setAttributeNS (null, "x2", "0%");
+            grad.setAttributeNS (null, "y1", "100%");
+            grad.setAttributeNS (null, "y2", "0%");
+            var stopTop = document.createElementNS (xmlns, "stop");
+            stopTop.setAttributeNS (null, "offset", "0%");
+            stopTop.setAttributeNS (null, "stop-color", "#ff0000");
+            grad.appendChild (stopTop);
+            var stopBottom = document.createElementNS (xmlns, "stop");
+            stopBottom.setAttributeNS (null, "offset", "100%");
+            stopBottom.setAttributeNS (null, "stop-color", "#0000ff");
+            grad.appendChild (stopBottom);
+            defs.appendChild (grad);
+            g.appendChild (defs);
+
+                // draw borders
+            var coords = "M 0, 0";
+            coords += " l 0, 300";
+            coords += " l 300, 0";
+            coords += " l 0, -300";
+            coords += " l -300, 0";
+
+            var path = document.createElementNS (xmlns, "path");
+            path.setAttributeNS (null, 'stroke', "#000000");
+            path.setAttributeNS (null, 'stroke-width', 10);
+            path.setAttributeNS (null, 'stroke-linejoin', "round");
+            path.setAttributeNS (null, 'd', coords);
+            path.setAttributeNS (null, 'fill', "url(#gradient)");
+            path.setAttributeNS (null, 'opacity', 1.0);
+            g.appendChild (path);
+
+            var svgContainer = document.getElementById ("svgContainer");
+            svgContainer.appendChild (svgElem); 
+
