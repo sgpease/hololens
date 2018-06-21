@@ -1,6 +1,4 @@
 /*!
  * border: 1px solid black;*/
 
-body{margin:30px; background-image: url(../images/wolfson1stfloorEIISLab1pt.svg); background-repeat: no-repeat; background-size : 800px ;background-position: 29px 99px;}
-svg{position: absolute; fill: none; }
-h1{font-size:20pt}
+body{margin:30px}

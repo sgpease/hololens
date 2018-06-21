@@ -15,21 +15,15 @@
 <body>
 	<script src="js/s2s_mqtt.js"></script>
 	<script src="js/mqttws/mqttws31.js"></script>
-    <script src="js/svg-pan-zoom.js"></script>	
-    <div class="introContainer" padding="10px" >
+	<div class="introContainer">
 		<h1>EIIS Lab Tracking System </h1>
-		<p class="introText"> Double Click Target (<span id="printx"></span>m, <span id="printy"></span>m)</p>
+		<p class="introText"> Target requested (<span id="printx"></span>m, <span id="printy"></span>m)</p>
 		<p id="printlocation"></p>
-
 	</div>
 	<div class="row">
-		<div class = "col-lg-10" padding="100px" >
-			<!-- <button id="reset">Reset</button> ->
-			            <!-- <svg  id="map" width="1280" height="640" preserveAspectRatio="xMidYMid meet"  viewBox="0 0 1280 640" fill: none; ></svg> 
-			        			<g x="0" y="0" id="eventbox" transform="matrix(1,0,0,1,200,200)">
--->  
-		<svg id="map" width="1280" height="640" version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 5311.652 2409.451 782.838">
-			<g id="eventbox" transform="matrix(1,0,0,1,1,1)">
+		<div class = "col-lg-10" padding="100" >
+		<svg id="wfmap" version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 5311.652 2409.451 782.838">
+			<g>
 			<path d="M1856.738,5616.452h1.732h1.732c1.657,0,3-1.343,3-3v-0.02v-0.021l-0.005-0.166l-0.001-0.018
 				c-0.007-0.125-0.016-0.204-0.036-0.327l-0.003-0.018c-0.021-0.123-0.061-0.291-0.099-0.41l-0.006-0.019
 				c-0.037-0.119-0.047-0.146-0.096-0.261l-0.008-0.019c-0.049-0.115-0.082-0.184-0.143-0.293l-0.01-0.018
@@ -753,8 +747,13 @@
 				c0-0.608-0.184-1.173-0.495-1.646V5737.931z"/>
 			</g>
 		</svg>
+            <svg id="map" width="1280" height="640" preserveAspectRatio="xMidYMid meet"  viewBox="0 0 1280 640" fill: none; >
+                   <g id="map" transform="matrix(1,0,0,1,200,200)">
 
- 
+                    	<rect id="eventbox" x="0" y="0"  fill: none;/> 
+                   </g>
+
+            </svg>    
         </div>
 	</div>
 	<div class="row">
@@ -762,7 +761,6 @@
 	<script>
 		document.getElementById("printx").innerHTML = 0;
 		document.getElementById("printy").innerHTML = 0;
-
 
 		client = new Messaging.Client("localhost", Number("8000"), "clientId");
 		client.onConnectionLost = onConnectionLost;
@@ -810,24 +808,23 @@
 
 		var svg = document.getElementById("map");
 		document.getElementsByTagName('svg')[0].addEventListener("mousewheel", mouseWheelHandler, false);
-		svg.addEventListener("dblclick", alert_click, false);
 
-		var scrollSensitivity = 0.02
-		var pt = document.getElementById("map").createSVGPoint();
+		var scrollSensitivity = 0.2
+		var pt = svg.createSVGPoint();
 		var roomOriginX = 0;
 		var roomOriginY = 0;
 		// MARK ORIGIN at 0,0
-		
+		createDot(roomOriginX+3,roomOriginY+3, 3,'red');
+		svg.addEventListener("mousedown", alert_click, false);
 
     	// CREATE DOTS =======================================================
 		function moveLine(x, y) {
-			createDot(roomOriginX+10,roomOriginY+10, 3,'red');
-			createDot((roomOriginX + (x * 10)),(roomOriginY + (y * 10)), 3, 'blue');
+			createDot((roomOriginX + (x * 10)),(roomOriginY + (y * 10)), 3, 'black');
 		};
 
     	// PRINT AND SEND CLICK LOCATION POINTS ==============================
 		function alert_click(evt) {
-    		var cursorpt = cursorPoint(evt, map);
+    		var cursorpt = cursorPoint(evt, eventbox);
    		 	//console.log("(" + cursorpt.x + ", " + cursorpt.y + ")");
    		 	//alert("(" + cursorpt.x + ", " + cursorpt.y + ")");
    		 	dx = cursorpt.x-roomOriginX;
@@ -852,9 +849,7 @@
     	// RENDER DOTS FOR LOCATION ==========================================
 		function createDot(x, y, rad, color) {
         	var circle= makeSVG('circle', {cx: x, cy: y, r:rad, fill: color});
-        	document.getElementById("map").appendChild(circle);
-
-
+        	document.getElementById('map').appendChild(circle);
 		};
         function makeSVG(tag, attrs) {
             var el= document.createElementNS('http://www.w3.org/2000/svg', tag);
@@ -866,11 +861,18 @@
     	// SCROLL MAP ========================================================
 
         function mouseWheelHandler(e) {
-        	var panZoom = svgPanZoom('#map', {
-          		zoomEnabled: true,
-          		controlIconsEnabled: false
-
-        	});
+    
+    		var evt = window.event || e;
+    		var scroll = evt.detail ? evt.detail * scrollSensitivity : (evt.wheelDelta / 120) * scrollSensitivity;
+    
+    		var transform = document.getElementById("map").getAttribute("transform").replace(/ /g, "");
+    
+    		var vector = transform.substring(transform.indexOf("(")+1, transform.indexOf(")")).split(",")
+    		vector[0] = (+vector[0] + scroll) + '';
+    		vector[3] = vector[0];
+    
+    		document.getElementById("map").setAttribute("transform", "matrix(" + vector.join() + ")");
+    
     		return true; 
 		}
 
