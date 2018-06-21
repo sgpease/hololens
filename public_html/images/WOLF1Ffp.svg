@@ -1,8 +1,7 @@
 
-<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-	 width="2287.647px" height="623.875px" viewBox="121.803 7999.116 2287.647 623.875"
-	 enable-background="new 121.803 7999.116 2287.647 623.875" xml:space="preserve">
-<g>
+<svg version="1.1" id="map" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="2287.647px" height="623.875px" viewBox="121.803 7999.116 2287.647 623.875">
+<g id="mapgrp">
 	<path d="M1856.738,8272.28h1.732h1.732c1.656,0,3-1.344,3-3v-0.021v-0.021l-0.006-0.166v-0.019
 		c-0.008-0.125-0.017-0.204-0.037-0.327l-0.002-0.018c-0.021-0.123-0.062-0.291-0.1-0.41l-0.006-0.02
 		c-0.037-0.119-0.047-0.146-0.096-0.262l-0.008-0.019c-0.05-0.115-0.082-0.185-0.144-0.293l-0.01-0.019
