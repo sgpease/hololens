@@ -18,7 +18,7 @@
     <script src="js/svg-pan-zoom.js"></script>	
     <div class="introContainer" padding="10px" >
 		<h1>EIIS Lab Tracking System </h1>
-		<p class="introText"> Double Click Target (<span id="printx"></span>m, <span id="printy"></span>m)</p>
+		<p class="introText"> Double Click to Target (<span id="printx"></span>m, <span id="printy"></span>m)</p>
 		<p id="printlocation"></p>
 
 	</div>
@@ -26,10 +26,10 @@
 		<div class = "col-lg-10" padding="100px" >
 			<!-- <button id="reset">Reset</button> ->
 			            <!-- <svg  id="map" width="1280" height="640" preserveAspectRatio="xMidYMid meet"  viewBox="0 0 1280 640" fill: none; ></svg> 
-			        			<g x="0" y="0" id="eventbox" transform="matrix(1,0,0,1,200,200)">
+			        			<g x="0" y="0" id="ii" transform="matrix(1,0,0,1,200,200)">
 -->  
 		<svg id="map" width="1280" height="640" version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 5311.652 2409.451 782.838">
-			<g id="eventbox" transform="matrix(1,0,0,1,1,1)">
+			<g id="mapgrp" transform="matrix(1,0,0,1,1,1)">
 			<path d="M1856.738,5616.452h1.732h1.732c1.657,0,3-1.343,3-3v-0.02v-0.021l-0.005-0.166l-0.001-0.018
 				c-0.007-0.125-0.016-0.204-0.036-0.327l-0.003-0.018c-0.021-0.123-0.061-0.291-0.099-0.41l-0.006-0.019
 				c-0.037-0.119-0.047-0.146-0.096-0.261l-0.008-0.019c-0.049-0.115-0.082-0.184-0.143-0.293l-0.01-0.018
@@ -809,14 +809,21 @@
 		};
 
 		var svg = document.getElementById("map");
-		document.getElementsByTagName('svg')[0].addEventListener("mousewheel", mouseWheelHandler, false);
+		var svgg = document.getElementById("mapgrp");
+    	svg.appendChild(svgg)
+		svg.addEventListener("mousewheel", mouseWheelHandler, false);
 		svg.addEventListener("dblclick", alert_click, false);
+    	//var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
+    	//svg.setAttributeNS(null, 'id', 'map')
+    	//svg.setAttributeNS(null, 'width', '100%')
+    	//svg.setAttributeNS(null, 'height', '100%')
+
 
 		var scrollSensitivity = 0.02
-		var pt = document.getElementById("map").createSVGPoint();
+		var pt = svg.createSVGPoint();// used for click target
 		var roomOriginX = 0;
 		var roomOriginY = 0;
-		// MARK ORIGIN at 0,0
+		// MARK ORIGIN at 0,0 or take from message
 		
 
     	// CREATE DOTS =======================================================
@@ -825,9 +832,34 @@
 			createDot((roomOriginX + (x * 10)),(roomOriginY + (y * 10)), 3, 'blue');
 		};
 
+		 // RENDER DOTS FOR LOCATION ==========================================
+		function createDot(x, y, rad, color) {
+        	//var circle= makeSVG('circle', {cx: x, cy: y, r:rad, fill: color});
+        	//var dot = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+        	//svgg.appendChild(circle);
+
+        	var circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    		circle.setAttribute('cx', x);
+    		circle.setAttribute('cy', y);
+    		circle.setAttribute('r', rad);
+    		circle.setAttribute('fill', color);
+    		//svgg.appendChild(circle);
+       		document.getElementById("mapgrp").appendChild(circle);
+    		//document.getElementById("map").appendChild(circle);
+		};
+
+		// SCROLL PAN MAP ====================================================
+        function mouseWheelHandler(e) {
+        	var panZoom = svgPanZoom('#map', {
+          		zoomEnabled: true,
+          		controlIconsEnabled: false
+
+        	});
+    		return true; 
+		}
     	// PRINT AND SEND CLICK LOCATION POINTS ==============================
 		function alert_click(evt) {
-    		var cursorpt = cursorPoint(evt, map);
+    		var cursorpt = cursorPoint(evt, svg);
    		 	//console.log("(" + cursorpt.x + ", " + cursorpt.y + ")");
    		 	//alert("(" + cursorpt.x + ", " + cursorpt.y + ")");
    		 	dx = cursorpt.x-roomOriginX;
@@ -848,31 +880,6 @@
     		else
         		return pt.matrixTransform(element.getScreenCTM().inverse());
 		};
-
-    	// RENDER DOTS FOR LOCATION ==========================================
-		function createDot(x, y, rad, color) {
-        	var circle= makeSVG('circle', {cx: x, cy: y, r:rad, fill: color});
-        	document.getElementById("map").appendChild(circle);
-
-
-		};
-        function makeSVG(tag, attrs) {
-            var el= document.createElementNS('http://www.w3.org/2000/svg', tag);
-            for (var k in attrs)
-                el.setAttribute(k, attrs[k]);
-            return el;
-        }
-
-    	// SCROLL MAP ========================================================
-
-        function mouseWheelHandler(e) {
-        	var panZoom = svgPanZoom('#map', {
-          		zoomEnabled: true,
-          		controlIconsEnabled: false
-
-        	});
-    		return true; 
-		}
 
 
 	</script>
